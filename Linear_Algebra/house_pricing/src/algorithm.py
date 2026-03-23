@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import os
 import kagglehub
-from ../plot import plot
+#from ../plot import plot
 
 
 
@@ -43,7 +43,7 @@ print(dataset.iloc[5])
 # Arguments, weight w(int), features x(list[int]), bias b(int)
 # retuns y from || --- 
 # y = w1x1 + w2x2 + w3x3 + w4x4 + ... + bi ||  , wi:weight x1:feature ie rooms/area/position bi: bias
-def linear_regression(w: int, x: list, b: int):
+def y_func(w: int, x: list, b: int):
     y = 0
     for el in x:
         y += w * el
@@ -55,6 +55,13 @@ def linear_regression(w: int, x: list, b: int):
 def get_data(i: int, path: str):
     temporaryData = dataset.iloc[i]
     return temporaryData
+
+def linear_regression(li : list, b : float) -> float: 
+    pass    
+
+
+def standardisation():
+    pass
 
 
 # instructions
@@ -69,5 +76,4 @@ def get_data(i: int, path: str):
 
 # Plot function
 # plot(data) | pandas list as input
-
 
