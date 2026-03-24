@@ -77,3 +77,5 @@ def standardisation():
 # Plot function
 # plot(data) | pandas list as input
 
+if __name__ == "__main__":
+    main()
