@@ -1,6 +1,8 @@
 import pandas as pd
 import os
 import kagglehub
+from typing import Iterator
+from feature_scaling import Feature_scaling 
 
 pd.set_option('display.max_columns', None)
 
@@ -21,11 +23,18 @@ class Dataset:
         for _, row in data.iterrows():
             yield list(row)
 
-    def getData() -> list[float]: # Returns list of processed data (float)
+    def getData(self) -> list[float]: # Returns list of processed data (float)
         for rawData in self.processDataFile():
             #TODO: Use dataparsing - Feature Scaling
-        
-            pass
+            # method for scaling: update mean every iteration
+            # categorize/slice lists to numerical features
+            # convert text/str data into numerical/float||str
+            # scale
+            # then add them up (same order as original)
+            
+            fs = Feature_scaling()
+            for i in range(len(rawData)):
+                  fs.addData(rawdata[i], i)
 
             #yield 
         
@@ -37,8 +46,9 @@ datasetPath = os.path.join(path, 'train.csv')
 # Test
 def main():
     d = Dataset(datasetPath)
+    d.getData()
     for houseData in d.processDataFile(): # This method to get generated objects
-        print(houseData)
-
+        #print(houseData)
+        pass
 if __name__ == "__main__":
     main()

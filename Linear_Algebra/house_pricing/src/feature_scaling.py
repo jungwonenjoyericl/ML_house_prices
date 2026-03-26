@@ -1,23 +1,18 @@
-import dataset as ds
-
-
-
-
 #TODO: calculate mean + std
 # write it out to json in /data/metadata
 
 class Feature_scaling():
     def __init__(self):
-        self.
-        self.mean = list()
+        self.meanLength = 0
+        self.mean = list([] for _ in range(7))      
         self.std = list()
 
     def scaleData(self):
         #TODO: use calculated constants to scale data
         pass
 
-    # take list of one features values as input
-    # return calculated mean
+    # calculate a list with all mean values
+    # return a copy of a calculated mean
     def calculateMean(self):
         sum = 0
         i = 0
@@ -33,18 +28,28 @@ class Feature_scaling():
     # return calculated std
     def calculateStd(self):
         pass
-
-    def mean(self):
+    
+    # adds data to [pos] index of self.mean list
+    # updates current sum of data, adds to meanLength(mathematically n)
+    def addData(self, val : float, pos : int):
         #TODO: get a list with mean of all features in order
-        pass
+        print(self.mean, val)
+        
+        try:
+            self.mean[pos] += val 
+            self.meanLength += 1
+        except:
+            self.mean[pos].append(val)
 
     def std(self):
-        #TODO: get a list with std of all features in order
+        #TODO: get a list with std of all fieatures in order
         pass
 
 
 # Test
 def main():
+    import dataset as ds
+
     dp = ds.datasetPath
     
     d = ds.Dataset(dp)
