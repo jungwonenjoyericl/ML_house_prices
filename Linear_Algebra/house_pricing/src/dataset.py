@@ -40,23 +40,25 @@ class Dataset:
             # scale
             # yield the updated list (same order as original)
             numericalFeatures = [rawData[el] for el in nonBinaryFeatureIndexes]
-            fs.addData(numericalFeatures)
+         #   fs.addData(numericalFeatures)
 
-        print(fs.mean()) # gets mean values
+        #print(fs.mean()) # gets mean values
 
-        for rawData in self.processDataFile():
-            numericalFeatures = [rawData[el] for el in nonBinaryFeatureIndexes]
+        #for rawData in self.processDataFile():
+        #numericalFeatures = [rawData[el] for el in nonBinaryFeatureIndexes]
 
-        fs.stdStream(numericalFeatures)
-        print(fs.std())
+        #fs.stdStream(numericalFeatures)
+        #print(fs.std())
         # ----
-
+            fs.welfordAlgorithm(numericalFeatures)
+        print(fs.getMean())
+        print(fs.getStd())
         #TODO: scale data 
         for rawData in self.processDataFile():
-            numFeatures = [rawData[el] for el in nonBinaryFeatureIndexes]
-            scaledFeatures = fs.scaleData(numFeatures)
+          #  numFeatures = [rawData[el] for el in nonBinaryFeatureIndexes]
+         #   scaledFeatures = fs.scaleData(numFeatures)
             #TODO: join together the lists
-            
+            pass 
 # Get data
 path = kagglehub.dataset_download("anmolkumar/house-price-prediction-challenge")
 datasetPath = os.path.join(path, 'train.csv')

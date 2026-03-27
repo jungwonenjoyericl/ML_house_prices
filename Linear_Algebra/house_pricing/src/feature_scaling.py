@@ -6,14 +6,37 @@ from math import sqrt
 class Feature_scaling():
     def __init__(self):
         self.n = 0
-        self.sums = list(0.0 for _ in range(5))      
+        self.sums = list(0.0 for _ in range(5))  # can improve/vary    
         self.sqStd = self.sums
+        self.meanList = self.sums
+        self.sqSum = self.sums
 
     # scales the data in (x - mean) / std
     # returns a new list 
     def scaleData(self):
         #TODO: use calculated constants to scale data
         pass
+
+    def welfordAlgorithm(self, singlePass):
+        
+        for i in range(len(singlePass)):
+            self.n += 1
+            x_n = singlePass[i]
+            prev_mean = self.meanList[i]
+            meanQuotient = (x_n - prev_mean)/self.n
+            cur_mean = prev_mean + meanQuotient
+            self.meanList[i] = cur_mean
+            M = self.sqSum[i] + (x_n - prev_mean)*(x_n - cur_mean)
+            self.sqSum[i] = M
+            # TODO: fix ^^^
+
+
+    def getStd(self) -> list[float]:
+        std = [sqrt(el/(self.n - 1)) for el in self.sqSum]
+        return
+
+    def getMean(self) -> list[float]:
+        return self.meanList
 
     # calculate a list with all mean values
     # return a calculated mean
