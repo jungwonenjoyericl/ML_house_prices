@@ -1,62 +1,60 @@
+from math import sqrt
+
 #TODO: calculate mean + std
 # write it out to json in /data/metadata
 
 class Feature_scaling():
     def __init__(self):
-        self.meanLength = 0
-        self.mean = list([] for _ in range(7))      
-        self.std = list()
+        self.n = 0
+        self.sums = list(0.0 for _ in range(5))      
+        self.sqStd = self.sums
 
+    # scales the data in (x - mean) / std
+    # returns a new list 
     def scaleData(self):
         #TODO: use calculated constants to scale data
         pass
 
     # calculate a list with all mean values
-    # return a copy of a calculated mean
-    def calculateMean(self):
-        sum = 0
-        i = 0
-
-        for el in range(len(self.mean)):
-            sum += self.mean[i]
-            i += 1
-
-        mean = sum/i
+    # return a calculated mean
+    def mean(self) -> list[float]:
+        mean = [el/self.n for el in self.sums]
         return mean
             
     # take list of one features values as input
-    # return calculated std
-    def calculateStd(self):
-        pass
+    # return a calculated std
+    def std(self) -> list[float]:
+        std = [sqrt(el) for el in self.sqStd]
+        return std
     
-    # adds data to [pos] index of self.mean list
-    # updates current sum of data, adds to meanLength(mathematically n)
-    def addData(self, val : float, pos : int):
+    # adds data to self.sums for every index
+    # updates current sum of data, adds to meanLength(mathematically notated n)
+    def addData(self, singlePass : list):
         #TODO: get a list with mean of all features in order
-        print(self.mean, val)
-        
-        try:
-            self.mean[pos] += val 
-            self.meanLength += 1
-        except:
-            self.mean[pos].append(val)
+        for i in range(len(singlePass)):
+            self.sums[i] += singlePass[i]
+        self.n += 1
 
-    def std(self):
-        #TODO: get a list with std of all fieatures in order
-        pass
+    # adds every term on iteration of sigma((xi - mean)**2)/n to std list
+    def stdStream(self, singlePass : list):
+        for i in range(len(singlePass)):
+            x_i = singlePass[i]
+            mean = self.mean()[i]
 
+            numerator = (x_i - mean)**2
+            quotient = numerator/self.n
+
+            self.sqStd[i] += quotient
 
 # Test
 def main():
     import dataset as ds
-
     dp = ds.datasetPath
     
     d = ds.Dataset(dp)
     binary_features = ["UNDER_CONSTRUCTION"]
     for data in d.processDataFile():
-        print(type(data[i]))
-
+        print(data)
 # data representation:
 # POSTED_BY:ownername
 # UNDER_CONSTRUCTION:1/0

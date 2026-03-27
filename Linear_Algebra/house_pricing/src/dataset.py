@@ -23,22 +23,40 @@ class Dataset:
         for _, row in data.iterrows():
             yield list(row)
 
+
+    #TODO: improve by using Welford's algorithm
+    # Currently using two-pass (slower for bigger datasets)
+    # pass 1: get mean
+    # pass 2: get std
+    # pass 3: stream scaled data
+    # ^^ 2 passes when using Welford's algorithm
     def getData(self) -> list[float]: # Returns list of processed data (float)
+        nonBinaryFeatureIndexes = [3, 5, 9, 10, 11] # improvement: not use hardcoded indexes
+        fs = Feature_scaling()
+
+        # ---- 
         for rawData in self.processDataFile():
             #TODO: Use dataparsing - Feature Scaling
-            # method for scaling: update mean every iteration
-            # categorize/slice lists to numerical features
-            # convert text/str data into numerical/float||str
             # scale
-            # then add them up (same order as original)
+            # yield the updated list (same order as original)
+            numericalFeatures = [rawData[el] for el in nonBinaryFeatureIndexes]
+            fs.addData(numericalFeatures)
+
+        print(fs.mean()) # gets mean values
+
+        for rawData in self.processDataFile():
+            numericalFeatures = [rawData[el] for el in nonBinaryFeatureIndexes]
+
+        fs.stdStream(numericalFeatures)
+        print(fs.std())
+        # ----
+
+        #TODO: scale data 
+        for rawData in self.processDataFile():
+            numFeatures = [rawData[el] for el in nonBinaryFeatureIndexes]
+            scaledFeatures = fs.scaleData(numFeatures)
+            #TODO: join together the lists
             
-            fs = Feature_scaling()
-            for i in range(len(rawData)):
-                  fs.addData(rawdata[i], i)
-
-            #yield 
-        
-
 # Get data
 path = kagglehub.dataset_download("anmolkumar/house-price-prediction-challenge")
 datasetPath = os.path.join(path, 'train.csv')
@@ -47,6 +65,7 @@ datasetPath = os.path.join(path, 'train.csv')
 def main():
     d = Dataset(datasetPath)
     d.getData()
+    #print((pd.read_csv(datasetPath)).shape)
     for houseData in d.processDataFile(): # This method to get generated objects
         #print(houseData)
         pass
