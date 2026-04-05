@@ -7,15 +7,12 @@ import kagglehub
 
 
 path = kagglehub.dataset_download("anmolkumar/house-price-prediction-challenge")
-print("Path to dataset files:", path)
-
 
 # change dataset type for reading
 if isinstance(path, list):
     path = path[0]
 
 files = os.listdir(path)
-print("files: ", files)
 
 # dataset 
 datasetPath = os.path.join(path, 'train.csv')
@@ -36,7 +33,6 @@ dataset = pd.read_csv(datasetPath)
 # TARGET:price
 
 
-print(dataset.iloc[5])
 
 
 # Get a function with linear regression
@@ -64,6 +60,11 @@ def standardisation():
     pass
 
 
+
+def main():
+    pass
+
+
 # instructions
 # geographical feature: coordinates
 # additional improvements on geographical info:
@@ -76,6 +77,7 @@ def standardisation():
 
 # Plot function
 # plot(data) | pandas list as input
+
 
 if __name__ == "__main__":
     main()

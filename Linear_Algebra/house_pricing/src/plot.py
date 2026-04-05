@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import os
 from random import randint
 
 def plot(X : list[int], Y : list[int]):
@@ -15,10 +16,16 @@ def createRandomPoints(n : int) -> int:
         yCoordList.append(randint(1,100))
     return xCoordList, yCoordList
 
-x, y = createRandomPoints(100)
-print(len(x))
+def main():
+    x, y = createRandomPoints(100)
+    print(len(x))
+    
+    plot(x,y)
 
-plot(x,y)
+    projectPath = os.getcwd()
+    plotImagePath = os.path.join(projectPath, "data", "plot.png")
+    plt.savefig(plotImagePath)
 
-
+if __name__ == "__main__":
+    main()
 
