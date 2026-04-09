@@ -6,77 +6,34 @@ import kagglehub
 
 
 
-path = kagglehub.dataset_download("anmolkumar/house-price-prediction-challenge")
 
-# change dataset type for reading
-if isinstance(path, list):
-    path = path[0]
-
-files = os.listdir(path)
-
-# dataset 
-datasetPath = os.path.join(path, 'train.csv')
-dataset = pd.read_csv(datasetPath)
-
-# data representation:
-# POSTED_BY:ownername
-# UNDER_CONSTRUCTION:1/0
-# RERA:Approved by real estate ? 1/0
-# BHK_NO.:amount of rooms
-# BHK_OR_RK:room-kitchen or not? 1/0
-# SQUARE_FT:area
-# READY_TO_MOVE:1/0
-# RESALE:1/0
-# ADRESS:STRING
-# LONGITUDE:int
-# LATITUDE:int
-# TARGET:price
-
-
-
-
-# Get a function with linear regression
-# Arguments, weight w(int), features x(list[int]), bias b(int)
+# Arguments, weight w(float), features x(list[float]), bias b(float)
 # retuns y from || --- 
 # y = w1x1 + w2x2 + w3x3 + w4x4 + ... + bi ||  , wi:weight x1:feature ie rooms/area/position bi: bias
-def y_func(w: int, x: list, b: int):
-    y = 0
-    for el in x:
-        y += w * el
 
-    y += b
-    return y
+class Model():
+    def __init__(self):
+        self.w : list[float] = np.array([[0.0] for _ in range(9)])
+        self.b : int = 0 #TODO: change to mean(y_train)
 
-
-def get_data(i: int, path: str):
-    temporaryData = dataset.iloc[i]
-    return temporaryData
-
-def linear_regression(li : list, b : float) -> float: 
-    pass    
-
-
-def standardisation():
-    pass
-
-
+    def predict(self, x : list[float]) -> float:
+        X = np.array([el for el in x])
+        Xw = np.dot(X, self.w)
+        y_pred = (Xw + self.b).item()
+        return y_pred
 
 def main():
-    pass
+    m = Model()
+    m.predict([1,2,3,4,5,6,7,8,9])
 
 
-# instructions
-# geographical feature: coordinates
 # additional improvements on geographical info:
 # * distance to center of city
 # * distance to water
 # * distance to public transport
 # * distance to school
-# rest already have numerical representation
 
 
-# Plot function
-# plot(data) | pandas list as input
 
 
 if __name__ == "__main__":

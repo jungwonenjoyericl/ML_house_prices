@@ -2,7 +2,7 @@ import pandas as pd
 import os
 import kagglehub
 from typing import Iterator
-from .feature_scaling import Feature_scaling 
+from feature_scaling import Feature_scaling 
 from sklearn.model_selection import train_test_split
 
 pd.set_option('display.max_columns', None)
@@ -74,11 +74,11 @@ class Dataset:
 
 # Test
 def main():
-    d = Dataset(datasetPath)
     path = kagglehub.dataset_download("anmolkumar/house-price-prediction-challenge")
     datasetPath = os.path.join(path, 'train.csv')
+    d = Dataset(datasetPath)
     for x_tr, y_tr in d.getData():
-        print(x_tr)
+        print((x_tr))
         print("price: " + str(y_tr))
     #print((pd.read_csv(datasetPath)).shape)
     for houseData in d.processDataFile(): # This method to get generated objects
