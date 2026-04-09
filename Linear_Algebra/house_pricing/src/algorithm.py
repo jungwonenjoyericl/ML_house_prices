@@ -15,6 +15,10 @@ class Model():
     def __init__(self):
         self.w : list[float] = np.array([[0.0] for _ in range(9)])
         self.b : int = 0 #TODO: change to mean(y_train)
+        self.e : float = 0.0
+
+    def set_bias(self, x : float):
+        self.b = x
 
     def predict(self, x : list[float]) -> float:
         X = np.array([el for el in x])
@@ -22,10 +26,18 @@ class Model():
         y_pred = (Xw + self.b).item()
         return y_pred
 
+    def compute_and_set_error(self, x : list[float], y : float):
+        e = self.predict(x) - y
+        self.e = e
+        
+    
+
 def main():
     m = Model()
-    m.predict([1,2,3,4,5,6,7,8,9])
-
+    m.set_bias(142.3)
+    print(m.predict([1,2,3,4,5,6,7,8,9]))
+    m.compute_and_set_error([1,2,3,4,5,6,7,8,9], 112.2)
+    print(m.e)
 
 # additional improvements on geographical info:
 # * distance to center of city

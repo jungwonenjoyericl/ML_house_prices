@@ -2,7 +2,7 @@ import pandas as pd
 import os
 import kagglehub
 from typing import Iterator
-from feature_scaling import Feature_scaling 
+from .feature_scaling import Feature_scaling
 from sklearn.model_selection import train_test_split
 
 pd.set_option('display.max_columns', None)
@@ -10,6 +10,8 @@ pd.set_option('display.max_columns', None)
 class Dataset:
     def __init__(self, filePath : str):
         self.filePath = filePath
+        self.y_mean = 0.0
+        self.fs = Feature_scaling()
 
     #TODO: save val_data
     def processDataFile(self, chunksize=10000): # Take rows in CSV file; generate list with raw data
@@ -40,19 +42,24 @@ class Dataset:
         for _, row in data.iterrows():
             yield list(row)
 
-    # Streams training data for model
-    # yields x_train(scaled data) and y_train (actual price)
-    def getData(self):
+    
+    def computeMeanAndStd(self):
         numFeatureIndexes = [3, 5, 9, 10] # improvement: not use hardcoded indexes
-        featureIndexes = [1, 2, 4, 6, 7]
-        fs = Feature_scaling()
 
         # pass 1: fit (get mean, std)
         for rawData in self.processDataFile():
             numFeatures = [rawData[el] for el in numFeatureIndexes]
-            fs.welfordAlgorithm(numFeatures)
+            self.fs.welfordAlgorithm(numFeatures)
+            self.fs.update_y_sum(rawData[-1])
 
-        fs.updateStd()
+        self.fs.updateStd()
+
+    # Streams training data for model
+    # yields x_train(scaled data) and y_train (actual price)
+    def getData(self):
+        numFeatureIndexes = [3, 5, 9, 10] # improvement: not use hardcoded indexes
+
+        featureIndexes = [1, 2, 4, 6, 7]
 
         # pass 2: transform (scale numerical data)
         # to transform: x_train, x_val
@@ -60,7 +67,7 @@ class Dataset:
         for rawData in self.processDataFile():
             numFeatures = [rawData[el] for el in numFeatureIndexes]
             #TODO: join together the lists
-            scaledData = fs.scaleData(numFeatures)
+            scaledData = self.fs.scaleData(numFeatures)
             binData = [rawData[i] for i in featureIndexes]
             
             x_train = binData + scaledData 
@@ -69,8 +76,8 @@ class Dataset:
 
             yield x_train, y_train
 
-
-# Get data
+    def get_y_mean(self) -> float:
+        return self.fs.get_y_mean()
 
 # Test
 def main():
@@ -84,6 +91,7 @@ def main():
     for houseData in d.processDataFile(): # This method to get generated objects
         #print(houseData)
         pass
+    d.get_y_mean()
 
 if __name__ == "__main__":
     main()

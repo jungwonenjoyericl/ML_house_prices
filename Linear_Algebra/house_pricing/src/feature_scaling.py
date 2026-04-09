@@ -9,6 +9,7 @@ class Feature_scaling():
         self.stdList = list(0.0 for _ in range(4))
         self.meanList = list(0.0 for _ in range(4))
         self.sqSum = list(0.0 for _ in range(4))
+        self.y_sum = 0.0
 
     # scales the data in (x - mean) / std
     # returns a new list 
@@ -50,6 +51,16 @@ class Feature_scaling():
         else:
             raise ValueError("Need at least 2 data samples to compute Standard Deviation")
     
+    # updates total sum of all house prices
+    # needed for mean(y)
+    def update_y_sum(self, house_price : float):
+        self.y_sum += house_price
+    
+    # returns mean of y
+    # use of start bias
+    def get_y_mean(self) -> float:
+        y_mean = self.y_sum / self.n
+        return y_mean
 
 # Test
 def main():
