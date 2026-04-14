@@ -79,6 +79,9 @@ class Dataset:
     def get_y_mean(self) -> float:
         return self.fs.get_y_mean()
 
+    def get_sample_size(self) -> int:
+        return self.fs.n
+
 # Test
 def main():
     path = kagglehub.dataset_download("anmolkumar/house-price-prediction-challenge")
