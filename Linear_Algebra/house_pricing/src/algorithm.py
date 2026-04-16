@@ -6,7 +6,6 @@ import kagglehub
 
 
 
-
 # Arguments, weight w(float), features x(list[float]), bias b(float)
 # retuns y from || --- 
 # y = w1x1 + w2x2 + w3x3 + w4x4 + ... + bi ||  , wi:weight x1:feature ie rooms/area/position bi: bias
@@ -17,6 +16,7 @@ class Model():
         self.b : int = 0 #TODO: change to mean(y_train)
         self.n : int = 0.0
         self.learningRate : float = 0.01
+        self.prev_mse : float = 0.0
 
     def set_bias(self, x : float):
         self.b = x
@@ -27,42 +27,62 @@ class Model():
     def set_learningRate(self, alpha : float):
         self.learningRate = alpha
 
-    def y_predict(self, x : list[float]) -> float:
-        y_pred = np.empty((0, 1))
-        for dataPoint in x:
+    #TODO: let this func handle loop, or the training func()
+    def mean_squared_error(self, x : list[float], y : float):
+        prev_mse = self.prev_mse 
+        sum = 0
+
+        for dataPoint in X:
             X = np.array([el for el in dataPoint])
             Xw = np.dot(X, self.w)
-            cur_y_pred = (Xw + self.b)
-            y_pred = np.vstack([y_pred, cur_y_pred])
+            term = Xw + self.b
+            sum += term
+
+        self.prev_mse = sum  
+        return prev_mse, sum
+    
+    # Calculates y_pred with current f(x) = Xw + b
+    def y_predict(self, x : list[float]) -> float:
+        y_pred = np.matmul(x, self.w)
         return y_pred
 
-    def compute_error(self, x : list[float], y : float):
-        e_vec = np.empty((0, 1))
-
+    # Calculates error from y_pred - y_val
+    def compute_error(self, x : list[float], y : list[float]):
         y_pred_vec = self.y_predict(x)
-        
-        for i in range(y_pred_vec.size):
-            e = y_pred_vec[i] - y[i]
-            e_vec = np.vstack([e_vec, e])
 
+        e_vec = y_pred_vec - y
         return e_vec
         
-    def compute_weight_gradients(self, x : list[float], y : float) -> list[float]:
+    # Computes gradients for weight and bias
+    def compute_gradients(self, x : list[float], y : float) -> list[float]:
         e = self.compute_error(x, y)
 
         xT = x.T 
-        weightGradients = (2/self.n) * np.dot(xT, e)
-        biasGradient = (2/self.n) * sum(e)
+        weightGradients = (2 / self.n) * np.dot(xT, e)
+        biasGradient = (2 / self.n) * np.sum(e)
         return weightGradients, biasGradient
+    
+    # Updates the models parameter
+    def update_parameters(self, x : list[float], y : float):
+        w_gradient, b_gradient = self.compute_gradients(x, y)
+        self.w = self.w - self.learningRate * w_gradient
+        self.b = self.b - self.learningRate * b_gradient
 
-    def compute_bias_gradient(self, e : list[float]) -> float:
-        gradient = (2/self.n) * sum(e)
-        return gradient
+    # set manual amount of iterations/loops
+    def epochs_train(self, x : list[float], y : list[float], n : int):
+        for epoch in range(1, n + 1):
+            print("loop:" + str(epoch))
+            self.update_parameters(x, y)
 
-    def update_weight(self):
-        e = self.compute_error
-        self.w = self.w - self.learningRate * self.compute_weight_gradients(x, )
-        
+    # loop til residual difference hits threshold
+    def convergence_train(self, x : list[float], y : list[float], bound : float):
+
+        for i in range(x.size):
+            prev_msn, cur_msn = self.mean_squared_error(x[i], y[i])
+            if abs(prev_msn - cur_msn) < bound:
+                break
+            self.update_parameters(x, y)
+            print("loop:" + i + 1)
 
 def main():
     m = Model()

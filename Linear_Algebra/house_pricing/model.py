@@ -27,16 +27,13 @@ def main():
 
     X = np.array([x for x, y in dataPL.dataset.getData()]) 
 
-    Y = np.array([y for x, y in dataPL.dataset.getData()]) 
+    Y = np.array([[y] for x, y in dataPL.dataset.getData()]) 
 
- #   e = np.array([model.compute_error(x, y) for x, y in dataPL.dataset.getData()])
+    #wGrad, bGrad = model.compute_gradients(X, Y)
 
-    predict = model.y_predict(X)
+    testEpochs : int = 100
+    model.epochs_train(X, Y, testEpochs)
     
-    e_vector = model.compute_error(X, Y)
-
-    print(e_vector.size)
-
 #   compError = model.compute_error(X[0], Y[0])
   #  print(compError)
 
