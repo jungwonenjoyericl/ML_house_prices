@@ -29,21 +29,12 @@ class Model():
 
     #TODO: let this func handle loop, or the training func()
     def mean_squared_error(self, x : list[float], y : float):
-        prev_mse = self.prev_mse 
-        sum = 0
-
-        for dataPoint in X:
-            X = np.array([el for el in dataPoint])
-            Xw = np.dot(X, self.w)
-            term = Xw + self.b
-            sum += term
-
-        self.prev_mse = sum  
-        return prev_mse, sum
+        e = self.y_predict(x) - y
+        return np.mean(e ** 2)
     
     # Calculates y_pred with current f(x) = Xw + b
     def y_predict(self, x : list[float]) -> float:
-        y_pred = np.matmul(x, self.w)
+        y_pred = np.matmul(x, self.w) + self.b
         return y_pred
 
     # Calculates error from y_pred - y_val
@@ -58,8 +49,9 @@ class Model():
         e = self.compute_error(x, y)
 
         xT = x.T 
-        weightGradients = (2 / self.n) * np.dot(xT, e)
-        biasGradient = (2 / self.n) * np.sum(e)
+        n = x.shape[0]
+        weightGradients = (2 / n) * np.dot(xT, e)
+        biasGradient = (2 / n) * np.sum(e)
         return weightGradients, biasGradient
     
     # Updates the models parameter
@@ -71,18 +63,21 @@ class Model():
     # set manual amount of iterations/loops
     def epochs_train(self, x : list[float], y : list[float], n : int):
         for epoch in range(1, n + 1):
-            print("loop:" + str(epoch))
             self.update_parameters(x, y)
 
     # loop til residual difference hits threshold
-    def convergence_train(self, x : list[float], y : list[float], bound : float):
+    def convergence_train(self, x : list[float], y : list[float], bound : float, max_epochs=10000):
+        prev_mse = float("inf")
 
-        for i in range(x.size):
-            prev_msn, cur_msn = self.mean_squared_error(x[i], y[i])
-            if abs(prev_msn - cur_msn) < bound:
-                break
+        for epoch in range(1, max_epochs + 1):
             self.update_parameters(x, y)
-            print("loop:" + i + 1)
+
+            cur_mse = self.mean_squared_error(x, y)
+            
+            if abs(prev_mse - cur_mse) < bound:
+                break
+
+            prev_mse = cur_mse
 
 def main():
     m = Model()
