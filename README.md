@@ -213,3 +213,20 @@ This project was built to develop a deeper understanding of the mathematical and
 - Feature scaling
 - Online statistical algorithms
 - Model evaluation
+
+## Conclusion
+
+The results show that a linear regression model can capture some of the relationship between the available property features and house prices, but the relationship is not fully linear.
+In this case, the model showed weak predictive performance, with large residuals and substantial variation between predicted and actual house prices.
+
+Several factors likely limit the model's predictive performance:
+
+- House prices are influenced by non-linear relationships. For example, an increase in floor area does not necessarily correspond to the same proportional increase in price at every price level.
+- Features can interact with each other. The value of additional floor area may depend heavily on location, number of rooms, or other property characteristics.
+- Location is represented only by latitude and longitude, while real estate prices often depend on more complex geographical factors such as distance to city centers, public transport, schools, and local amenities.
+- The dataset may contain outliers and highly expensive properties that have a large effect on a model trained using Mean Squared Error.
+- Important explanatory variables may be missing from the dataset, meaning that the available features cannot fully explain the variation in house prices.
+
+Overall, the project demonstrates both the strengths and limitations of multiple linear regression. It provides an interpretable baseline model, but more flexible models or additional feature engineering would likely be required to model house prices more accurately.
+
+The current evaluation is primarily based on training data, so a completed validation pipeline is required before making conclusions about the model's out-of-sample predictive performance.
